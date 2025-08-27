@@ -1,52 +1,73 @@
-import {useState } from "react";
-import { InputField } from "./components/InputField/InputField";
-import { DataTable} from "./components/DataTable/DataTable";
-import type { Column } from "./components/DataTable/DataTable";
+import { useState } from "react";
+import { InputField } from "./components/InputField";
+import { DataTable } from "./components/DataTable";
+
 interface User {
   id: number;
   name: string;
-  email: string;
+  age: number;
 }
 
-const users: User[] = [
-  { id: 1, name: "Prakhar", email: "prakhar@example.com" },
-  { id: 2, name: "Ravi", email: "ravi@example.com" },
+const columns = [
+  { key: "id", title: "ID", dataIndex: "id", sortable: true },
+  { key: "name", title: "Name", dataIndex: "name", sortable: true },
+  { key: "age", title: "Age", dataIndex: "age", sortable: true },
 ];
 
-function App() {
-  const [name, setName] = useState("");
-
- const columns: Column<User>[] = [
-  { key: "id", title: "ID", dataIndex: "id" },
-  { key: "name", title: "Name", dataIndex: "name" },
-  { key: "email", title: "Email", dataIndex: "email" },
+const initialData: User[] = [
+  { id: 1, name: "Alice", age: 22 },
+  { id: 2, name: "Bob", age: 28 },
+  { id: 3, name: "Charlie", age: 24 },
 ];
+
+export default function App() {
+  const [username, setUsername] = useState("");
+  const [age, setAge] = useState<number | "">("");
+  const [tableData, setTableData] = useState<User[]>(initialData);
+
+  const handleAddUser = () => {
+    if (!username.trim() || age === "" || age <= 0) return;
+
+    const newUser: User = {
+      id: tableData.length + 1,
+      name: username,
+      age: Number(age),
+    };
+
+    setTableData([...tableData, newUser]);
+    setUsername("");
+    setAge("");
+  };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-xl font-bold">Assignment Demo</h1>
+    <div className="p-6 space-y-6 max-w-2xl mx-auto">
+      {/* <h1 className="text-2xl font-bold"></h1> */}
 
-      {/* InputField Example */}
-      <div>
-        <h2 className="text-lg font-semibold mb-2">InputField Example</h2>
+      <div className="flex flex-col gap-2 ">
         <InputField
-          label="Your Name"
-          placeholder="Enter name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          helperText="This is a helper text"
-          variant="outlined"
-          size="md"
+          label="Username"
+          placeholder="Enter username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
+        <InputField
+          label="Age"
+          placeholder="Enter age"
+          type="number"
+          value={age === "" ? "" : age}
+          onChange={(e) => setAge(Number(e.target.value))}
+        />
+        <div className="w-full flex justify-center">
+          <button
+            onClick={handleAddUser}
+            className=" w-[4rem] px-4 py-2 bg-blue-900 text-white rounded-md"
+          >
+            Add
+          </button>
+        </div>
       </div>
 
-      {/* DataTable Example */}
-      <div>
-        <h2 className="text-lg font-semibold mb-2">DataTable Example</h2>
-        <DataTable<User> data={users} columns={columns} />
-      </div>
+      <DataTable<User> data={tableData} columns={columns} />
     </div>
   );
 }
-
-export default App;

@@ -9,9 +9,9 @@ interface User {
 }
 
 const columns = [
-  { key: "id", title: "ID", dataIndex: "id", sortable: true },
-  { key: "name", title: "Name", dataIndex: "name", sortable: true },
-  { key: "age", title: "Age", dataIndex: "age", sortable: true },
+  { key: "id", title: "ID", dataIndex: "id" as keyof User, sortable: true },
+  { key: "name", title: "Name", dataIndex: "name" as keyof User, sortable: true },
+  { key: "age", title: "Age", dataIndex: "age" as keyof User, sortable: true },
 ];
 
 const initialData: User[] = [
@@ -40,9 +40,10 @@ export default function App() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-2xl mx-auto">
-      {/* <h1 className="text-2xl font-bold"></h1> */}
-
+    <div className="p-6 space-y-6 max-w-2xl mx-auto ">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Input Field</h1>
+      </div>
       <div className="flex flex-col gap-2 ">
         <InputField
           label="Username"
@@ -53,11 +54,23 @@ export default function App() {
         <InputField
           label="Age"
           placeholder="Enter age"
-          type="number"
-          value={age === "" ? "" : age}
-          onChange={(e) => setAge(Number(e.target.value))}
+          value={age === "" ? "" : String(age)}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === "") {
+            setAge("");
+            return;
+          }
+          if (/^\d+$/.test(val)) {
+            setAge(Number(val));
+          } else {
+            alert("Please enter only numbers for age!");
+          } 
+         
+          }}
         />
-        <div className="w-full flex justify-center">
+
+        <div className="w-full flex justify-center pt-2 ">
           <button
             onClick={handleAddUser}
             className=" w-[4rem] px-4 py-2 bg-blue-900 text-white rounded-md"
@@ -66,8 +79,10 @@ export default function App() {
           </button>
         </div>
       </div>
-
-      <DataTable<User> data={tableData} columns={columns} />
+      <div className="flex flex-col items-center">
+        <h1 className="text-2xl font-bold ">Data Table</h1> <br />
+        <DataTable<User> data={tableData} columns={columns} />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,3 @@
-
-
-// 👇 Column ko export karo
 export interface Column<T> {
   key: string;
   title: string;

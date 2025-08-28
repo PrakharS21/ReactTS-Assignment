@@ -11,6 +11,7 @@ export interface InputFieldProps {
   invalid?: boolean;
   variant?: "filled" | "outlined" | "ghost";
   size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
 const sizeClasses = {
@@ -30,6 +31,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   invalid = false,
   variant = "outlined",
   size = "md",
+  className = "",
 }) => {
   const variantClass =
     variant === "filled"
@@ -39,7 +41,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       : "border border-gray-400";
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${className}`}>
       {label && <label className="font-medium">{label}</label>}
       <input
         value={value}
@@ -49,7 +51,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         aria-invalid={invalid}
         className={`rounded ${sizeClasses[size]} ${variantClass} ${
           invalid ? "border-red-500" : ""
-        } ${disabled ? "bg-gray-200 cursor-not-allowed" : ""}`}
+        } ${disabled ? "bg-gray-200 cursor-not-allowed" : ""} bg-[#ecf0f3] rounded-2xl px-5 py-3 text-gray-700 border border-[#e2e8f0] shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] focus:shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] hover:shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] outline-none transition-all duration-300 ease-in-out`}
       />
       {helperText && !errorMessage && (
         <span className="text-xs text-gray-500">{helperText}</span>
